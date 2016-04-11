@@ -1,0 +1,233 @@
+/*
+Date: ***** /2016
+Application Name: Semester Project – Part 3: 
+                    First Shenandoah Bank Information System
+Team Members: Matt Seiler, Andrew Mize, Danielle Vasquez, Anton Zelster
+Purpose: Banking system with menus to create Customers/accounts, accept deposits
+and withdrawals. Also can display current balance and transaction reports.
+*/
+package GroupPart2;
+
+//We all worked together on this class
+
+import javafx.scene.text.*;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+import java.util.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.text.FontWeight;
+
+
+public class BankAppFX extends Application {
+    
+    public static ArrayList<StandardAccount> accounts = new 
+        ArrayList<StandardAccount>(); 
+    public static ArrayList<BankCustomer> customers = new
+        ArrayList<BankCustomer>();
+    
+    Button btnAddCust;
+    Button btnEnterTrans;
+    Button btnDisplayAccount;
+    ListView<String> custList; 
+    TextArea transList;
+    Label lblDescription;
+    Label lblAmount;
+    Label lblSelectCust;
+    Label lblTransListTitle;
+    TextField txtAddCust;
+    TextField txtDescription;
+    TextField txtAmount;
+    RadioButton radDeposit;
+    RadioButton radWithdrawal;
+    
+    ObservableList<String> name; 
+    
+    @Override
+    public void start(Stage primaryStage) {
+        btnAddCust = new Button("Add Customer");
+        btnEnterTrans = new Button("Enter Transaction");
+        btnDisplayAccount = new Button("Display Account");
+        custList = new ListView<>(name); 
+        transList = new TextArea();
+        lblDescription = new Label("Description:");
+        lblAmount = new Label("Amount:");
+        lblSelectCust = new Label("Select Customer above, then"
+                + " click the Display Account button to view:");
+        lblTransListTitle = new Label("Transaction Report:");
+        txtAddCust = new TextField();
+        txtDescription = new TextField();
+        txtAmount = new TextField();
+        radDeposit = new RadioButton("Deposit");
+        radWithdrawal = new RadioButton("Withdrawal");
+        
+        name = FXCollections.observableArrayList(); 
+        
+        //Put radio buttons in group so only one can be selected at a time
+        final ToggleGroup group = new ToggleGroup();
+        radDeposit.setToggleGroup(group);
+        radWithdrawal.setToggleGroup(group);
+
+        //Create pane and add controls to pane
+        GridPane primaryPane = new GridPane();
+        primaryPane.add(custList,0,0);
+        primaryPane.add(txtAddCust,0,4);
+        primaryPane.add(btnAddCust,1,4);
+        primaryPane.add(lblDescription,2,0);
+        primaryPane.add(lblAmount,2,1);
+        primaryPane.add(lblTransListTitle,0,5);
+        primaryPane.add(txtDescription,3,0);
+        primaryPane.add(txtAmount,3,1);
+        primaryPane.add(radDeposit,2,2);
+        primaryPane.add(radWithdrawal,3,2);
+        primaryPane.add(btnEnterTrans,3,3);
+        primaryPane.add(transList,0,7);
+        primaryPane.add(lblSelectCust,0,6);
+        primaryPane.add(btnDisplayAccount,3,6);
+        
+        //Specifiy sizing, spans, and padding
+        custList.setPrefSize(400,200);
+        transList.setPrefSize(730,300);
+        GridPane.setColumnSpan(custList,2);
+        GridPane.setRowSpan(custList,4);
+        GridPane.setColumnSpan(transList,4);
+        GridPane.setColumnSpan(lblSelectCust,3);
+        primaryPane.setHgap(20); //horizontal gap in pixels
+        primaryPane.setVgap(20);
+        primaryPane.setPadding(new Insets(20, 20, 20, 20));
+        lblTransListTitle.setFont(Font.font("Tahoma",FontWeight.BOLD, 18));
+        GridPane.setMargin(lblTransListTitle, new Insets(50,20,0,100));
+
+        Scene scene = new Scene(primaryPane, 800, 750);
+        
+        primaryStage.setTitle("First Shenadoah Bank Protoype");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        
+        //Coding help for Alerts from 
+        //http://code.makery.ch/blog/javafx-dialogs-official/
+        
+        //Alert if no name typed in TextField when Add Customer button clicked
+        Alert alertNoCustName = new Alert(AlertType.ERROR);
+        alertNoCustName.setTitle("Error!");
+        alertNoCustName.setHeaderText("No Customer Name Entered!");
+        alertNoCustName.setContentText("Please type in a customer name first.");
+        
+        //Alert if no customers created yet
+        Alert alertNoCust = new Alert(AlertType.ERROR);
+        alertNoCust.setTitle("Error!");
+        alertNoCust.setHeaderText("No Customer Created!");
+        alertNoCust.setContentText("Please create a customer first.");
+        
+        //Alert if no customers selected
+        Alert alertNoCustSelected = new Alert(AlertType.ERROR);
+        alertNoCustSelected.setTitle("Error!");
+        alertNoCustSelected.setHeaderText("No Customer Selected!");
+        alertNoCustSelected.setContentText("Please select a customer first.");
+        
+        //Alert if no transaction type selected
+        Alert alertSelectRad = new Alert(AlertType.ERROR);
+        alertSelectRad.setTitle("Error!");
+        alertSelectRad.setHeaderText("No Transaction Type Selected!");
+        alertSelectRad.setContentText("Please select Deposit or Withdrawal"
+                + " first.");
+                        
+        //Code that runs when Add Customer button clicked
+        btnAddCust.setOnAction(e -> {
+            String input = txtAddCust.getText();
+            if(txtAddCust.getText().isEmpty()){
+                alertNoCustName.showAndWait();
+            }
+            else if((input.charAt(0) == ' ')){
+                //Trim for real names
+                //what to do if nothing at all
+                alertNoCustName.showAndWait();
+            }
+            else{
+                name.clear();
+                customers.add(new BankCustomer(txtAddCust.getText()));
+                for(BankCustomer each: customers){
+                 name.add(each.getCustomerName());
+                 custList.setItems(name);
+                }
+                accounts.add(new StandardAccount(customers.get(name.size()-1))); 
+                txtAddCust.clear();
+            }
+        });
+        
+        //Code that runs when Enter Transaction button is clicked
+        btnEnterTrans.setOnAction(e ->{
+           Integer size = name.size();
+           if (size == 0)
+           {
+                alertNoCust.showAndWait(); 
+           }
+           else
+           {
+                if(custList.getSelectionModel().isEmpty())
+                {
+                    alertNoCustSelected.showAndWait();
+                }
+                else
+                {
+                    String description = txtDescription.getText();
+                    Double amount = Double.valueOf(txtAmount.getText());
+                    Integer selection = custList.getSelectionModel().
+                            getSelectedIndex();
+                    if(radDeposit.isSelected())
+                    {
+                        accounts.get(selection).
+                                enterTransaction(description,amount);   
+                        txtDescription.clear();
+                        txtAmount.clear();
+                        radDeposit.setSelected(false);
+                        radWithdrawal.setSelected(false);
+                    }
+                    else if(radWithdrawal.isSelected())
+                    {
+                        accounts.get(selection).enterTransaction(description,
+                                (amount * -1));
+                        txtDescription.clear();
+                        txtAmount.clear();
+                        radDeposit.setSelected(false);
+                        radWithdrawal.setSelected(false);
+                    }
+                    else
+                      alertSelectRad.showAndWait(); 
+                }
+            }
+        });
+        
+        //Code that runds when Display Account button is clicked
+        btnDisplayAccount.setOnAction(e ->{
+           if(custList.getSelectionModel().isEmpty())
+           {
+                alertNoCustSelected.showAndWait();
+           }
+           else
+           {
+                transList.clear();
+                Integer selection = custList.getSelectionModel().
+                getSelectedIndex();
+                transList.setText("Customer: "
+                             + customers.get(selection).getCustomerName()
+                             + "\n----------------\n"
+                             + accounts.get(selection).accountListing());
+                
+           }
+        });    
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+}
