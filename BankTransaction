@@ -1,0 +1,36 @@
+/*
+Date: *************** /2016
+Application Name: Semester Project – Part 3: 
+                    First Shenandoah Bank Information System JavaFX
+Team Members: Matt Seiler, Andrew Mize, Danielle Vasquez, Anton Zelster
+Purpose: Banking system with GUI to create Customers/accounts, accept deposits
+and withdrawals. Also can display current balance and transaction reports.
+*/
+package GroupPart2;
+//Danielle did most of this class
+public class BankTransaction {
+    //Data fields
+    private long millisTimeStamp;
+    private String description;
+    private double amount;
+    
+    //Constructor
+    public BankTransaction(String description, double amount){
+        this.description = description;
+        this.amount = amount;
+        //Save the system time for each transaction
+        this.millisTimeStamp = System.currentTimeMillis();
+    }
+    
+    //Mathods
+    public double getAmount(){
+        return amount;
+    }
+    public String getDescription(){
+        return description; 
+    }
+
+    public long getTimeStamp(){
+        return millisTimeStamp;
+    }
+}
