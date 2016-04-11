@@ -1,0 +1,33 @@
+/*
+Date: *************** /2016
+Application Name: Semester Project – Part 3: 
+                    First Shenandoah Bank Information System JavaFX
+Team Members: Matt Seiler, Andrew Mize, Danielle Vasquez, Anton Zelster
+Purpose: Banking system with GUI to create Customers/accounts, accept deposits
+and withdrawals. Also can display current balance and transaction reports.
+*/
+package GroupPart2;
+//Anton did most of this class
+public class BankCustomer {
+    //Data fields
+    private String customerName;
+    private int customerID;
+    private static int nextID = 100001;
+    
+   //Constructor
+   public BankCustomer(String customerName){
+       this.customerName = customerName;
+       this.customerID = nextID;
+       nextID++;//Automatically increment customerID for each object
+   }
+   
+   //Methods
+   public String getCustomerName(){
+       return customerName;
+   }
+   
+   public int getCustomerID(){
+       return customerID;
+   }
+   
+}
