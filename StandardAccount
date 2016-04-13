@@ -59,12 +59,14 @@ public class StandardAccount {
         for(int i=0;i<transactions.size();i++){
             //list all details
             description = transactions.get(i).getDescription();
-            amount = transactions.get(i).getAmount();
-            String amountS = (NumberFormat.getCurrencyInstance().
-                    format(amount) + ""); //Convert to currency
+            amount = transactions.get(i).getAmount(); 
+            //Convert amount to currency format
+            String amountCurrency = (NumberFormat.
+                    getCurrencyInstance().format(amount) + "");
             dateTime = transactionTimeStamp(transactions.get(i).getTimeStamp());
-            
-            listing += dateTime + "\t\t" + amountS + "\t\t" + description + "\n";
+            String format = "%-30s %-20s %5s";//Format specifications
+            listing += String.format(format,dateTime,amountCurrency,description) 
+                    + "\n";
                     } 
         listing += "----------------\nBalance: " + balanceS;
        return listing;
