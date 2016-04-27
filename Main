@@ -1,12 +1,12 @@
 /*
-Date: ***** /2016
+Date: 4/13/2016
 Application Name: Semester Project – Part 3: 
-                    First Shenandoah Bank Information System
+                    First Shenandoah Bank Information System JavaFX Main
 Team Members: Matt Seiler, Andrew Mize, Danielle Vasquez, Anton Zelster
-Purpose: Banking system with menus to create Customers/accounts, accept deposits
-and withdrawals. Also can display current balance and transaction reports.
+Purpose: Banking system with GUI to create Customers/accounts, accept deposits
+and withdrawals. Also can display Transaction Report
 */
-package GroupPart2;
+package GroupPart3;
 
 //We all worked together on this class
 
@@ -169,8 +169,8 @@ public class BankAppFX extends Application {
                 for(BankCustomer each: customers){
                     name.add(each.getCustomerName());
                     custList.setItems(name);
-                }
-                accounts.add(new StandardAccount(customers.get(name.size()-1))); 
+                    }
+                accounts.add(new StandardAccount(customers.get(name.size()-1)));
                 txtAddCust.clear();
             }
         });
@@ -202,6 +202,7 @@ public class BankAppFX extends Application {
                             getSelectedIndex();
                     if(radDeposit.isSelected())
                     {
+                        //Make and store deposit
                         accounts.get(selection).
                                 enterTransaction(description,amount);   
                         txtDescription.clear();
@@ -211,6 +212,7 @@ public class BankAppFX extends Application {
                     }
                     else if(radWithdrawal.isSelected())
                     {
+                        //Make and store withdrawal
                         accounts.get(selection).enterTransaction(description,
                                 (amount * -1));
                         txtDescription.clear();
