@@ -1,19 +1,20 @@
 /*
-Date: *************** /2016
+Date: 4/13/2016
 Application Name: Semester Project – Part 3: 
-                    First Shenandoah Bank Information System JavaFX
+                  First Shenandoah Bank Information System StandardAccount Class
 Team Members: Matt Seiler, Andrew Mize, Danielle Vasquez, Anton Zelster
 Purpose: Banking system with GUI to create Customers/accounts, accept deposits
 and withdrawals. Also can display current balance and transaction reports.
 */
-package GroupPart2;
+package GroupPart3;
 import java.util.*;
 import java.text.*;
 public class StandardAccount {
     //Andrew did most of this class
     
     //transactions array
-    private ArrayList<BankTransaction> transactions = new ArrayList<BankTransaction>();
+    private ArrayList<BankTransaction> transactions = 
+            new ArrayList<BankTransaction>();
     //Data fields
     private BankCustomer myCustomer;
     
@@ -37,10 +38,11 @@ public class StandardAccount {
     
     public String getTransaction(int pos){
         String transaction = "";
+        String dateTime = transactions.get(pos).getTimeStamp() + "";
         String amount = (transactions.get(pos).getAmount() + "");
         String description = transactions.get(pos).getDescription();
-        
-        transaction = amount + "\t" + description;
+        String format = "%-15s %-8s %3s";//Format specifications
+        transaction = String.format(format,dateTime,amount,description);
         
         return transaction;
     }
